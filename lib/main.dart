@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:audioplayers/audio_cache.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,7 +14,6 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,8 +24,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         backgroundColor: Colors.black,
         textTheme: TextTheme(
-            display1: TextStyle(
-                color: Colors.red, fontSize: 200, fontFamily: "DigitalClock")),
+          display1: TextStyle(
+              color: Colors.red, fontSize: 200, fontFamily: "DigitalClock"),
+        ),
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -36,15 +35,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
   final AudioCache player = AudioCache(prefix: "audio/");
@@ -55,8 +45,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentTime = 15;
+  double _fontSize = 1.0;
   bool _running = false;
   Timer _timer;
+
+  DragStartDetails dragStart;
+  DragUpdateDetails dragUpdate;
 
   @override
   void initState() {
@@ -76,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (_currentTime - 1 < 0) {
         timer.cancel();
       } else {
-        if (_currentTime - 1 == 10) {
+        if (_currentTime - 1 == 10 || _currentTime - 1 == 30) {
           widget.player.play('10 seconds.mp3');
         } else if (_currentTime - 1 > 0 && _currentTime - 1 <= 5) {
           widget.player.play('5 seconds.mp3');
@@ -93,7 +87,6 @@ class _MyHomePageState extends State<MyHomePage> {
   _stopCountdown() {
     _running = false;
     _timer.cancel();
-    _timer = null;
     setState(() {
       _currentTime = 15;
     });
@@ -101,32 +94,73 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
+      body: Stack(
+        children: <Widget>[
+          ButtonBar(
+            children: <Widget>[
+              IconButton(
+                color: Colors.white,
+                icon: Icon(Icons.remove),
+                onPressed: () {
+                  setState(() {
+                    if (_fontSize > 1) _fontSize -= .1;
+                  });
+                },
+              ),
+              IconButton(
+                color: Colors.white,
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  setState(() {
+                    if (_fontSize < 2.5) _fontSize += .1;
+                  });
+                },
+              ),
+              PopupMenuButton(
+                  icon: Icon(
+                    Icons.timer,
+                    color: Colors.white,
+                  ),
+                  onSelected: (value) {
+                    setState(() {
+                      _currentTime = value;
+                      _running = false;
+                      _timer.cancel();
+                    });
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem(child: Text("50 Seconds"), value: 50),
+                      PopupMenuItem(child: Text("30 Seconds"), value: 30),
+                      PopupMenuItem(child: Text("15 Seconds"), value: 15)
+                    ];
+                  })
+            ],
+          ),
+          Center(
+            child: Text(
               '$_currentTime',
-              style: Theme.of(context).textTheme.display1,
+              style: Theme.of(context)
+                  .textTheme
+                  .display1
+                  .apply(fontSizeFactor: _fontSize),
               textAlign: TextAlign.center,
             ),
-          ],
-        ),
+            // child: Baseline(
+            //   baseline: (200 * _fontSize) / 2.8,
+            //   baselineType: TextBaseline.ideographic,
+            //   child:
+            // ),
+          ),
+        ],
       ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: _running ? _stopCountdown : _startCountdown,
         tooltip: 'Start Countdown',
         child: _running ? Icon(Icons.stop) : Icon(Icons.play_arrow),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }

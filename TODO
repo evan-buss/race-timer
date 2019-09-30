@@ -1,7 +1,7 @@
 Features:
   ☐ Count down from certain time
     - Ian said it might be 40 seconds but the videos I've seen only start at 10
-  ☐ Play beeping sounds at specific intervals
+  ✔ Play beeping sounds at specific intervals @done(19-09-30 14:11)
     - 10
     - 5,4,3,2,1
     - 0
@@ -9,3 +9,11 @@ Features:
 UI:
   ☐ Large digital clock screen, landscape mode;
   ☐ Start / Stop / Restart Buttons
+
+
+Improvements:
+  ☐ Start at 50 by default
+    - Beep at 30
+  ☐ Increase font size
+  ☐ Manually set starting time
+    - If start time is set to 30, play the beep regardless
