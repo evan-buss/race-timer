@@ -147,11 +147,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   .apply(fontSizeFactor: _fontSize),
               textAlign: TextAlign.center,
             ),
-            // child: Baseline(
-            //   baseline: (200 * _fontSize) / 2.8,
-            //   baselineType: TextBaseline.ideographic,
-            //   child:
-            // ),
           ),
         ],
       ),
