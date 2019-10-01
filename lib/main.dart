@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.black,
         textTheme: TextTheme(
           display1: TextStyle(
-              color: Colors.red, fontSize: 200, fontFamily: "DigitalClock"),
+              color: Colors.red, fontSize: 200, fontFamily: "Digital"),
         ),
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
@@ -118,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Padding(
             padding: EdgeInsets.only(
-                bottom: 16 + MediaQuery.of(context).viewInsets.bottom),
+                bottom: 10 + MediaQuery.of(context).viewInsets.bottom),
             child: RaisedButton(
               child: Text("Set Custom Time"),
               onPressed: () {

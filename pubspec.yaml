@@ -51,6 +51,9 @@ flutter:
     - family: DigitalClock
       fonts: 
         - asset: "assets/fonts/Open 24 Display St.ttf"
+    - family: Digital
+      fonts: 
+        - asset: "assets/fonts/digital7.ttf"
 
   # To add assets to your application, add an assets section, like this:
   # assets:
