@@ -107,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
               keyboardType: TextInputType.number,
               controller: controller,
               decoration: new InputDecoration(
-                labelText: "Enter time in seconds",
+                labelText: "Time in Seconds",
                 fillColor: Colors.white,
                 border: new OutlineInputBorder(
                   borderRadius: new BorderRadius.circular(25.0),
