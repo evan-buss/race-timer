@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+SharedPreferences prefs;
 
 Future main() async {
   await SystemChrome.setPreferredOrientations([
@@ -10,6 +13,8 @@ Future main() async {
     DeviceOrientation.landscapeRight,
     DeviceOrientation.portraitUp
   ]);
+
+  prefs = await SharedPreferences.getInstance();
   runApp(MyApp());
 }
 
@@ -21,7 +26,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
         backgroundColor: Colors.black,
         textTheme: TextTheme(
           display1: TextStyle(
@@ -44,8 +49,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _currentTime = 15;
-  double _fontSize = 1.0;
+  int _currentTime = prefs.getInt("defaultTime") ?? 50;
+  double _fontSize = prefs.getDouble("defaultFontSize") ?? 1.0;
   bool _running = false;
   Timer _timer;
 
@@ -88,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _running = false;
     _timer.cancel();
     setState(() {
-      _currentTime = 15;
+      _currentTime = prefs.getInt("defaultTime") ?? 50;
     });
   }
 
@@ -104,7 +109,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 icon: Icon(Icons.remove),
                 onPressed: () {
                   setState(() {
-                    if (_fontSize > 1) _fontSize -= .1;
+                    if (_fontSize > 1) {
+                      _fontSize -= .1;
+                      prefs.setDouble("defaultFontSize", _fontSize);
+                    }
                   });
                 },
               ),
@@ -113,7 +121,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 icon: Icon(Icons.add),
                 onPressed: () {
                   setState(() {
-                    if (_fontSize < 2.5) _fontSize += .1;
+                    if (_fontSize < 2.5) {
+                      _fontSize += .1;
+                      prefs.setDouble("defaultFontSize", _fontSize);
+                    }
                   });
                 },
               ),
@@ -122,11 +133,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     Icons.timer,
                     color: Colors.white,
                   ),
-                  onSelected: (value) {
+                  onSelected: (value) async {
+                    prefs.setInt("defaultTime", value);
                     setState(() {
                       _currentTime = value;
-                      _running = false;
-                      _timer.cancel();
+                      if (_running || _timer != null) {
+                        _running = false;
+                        _timer.cancel();
+                      }
                     });
                   },
                   itemBuilder: (BuildContext context) {
