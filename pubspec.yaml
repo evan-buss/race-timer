@@ -48,9 +48,6 @@ flutter:
     - "assets/audio/10 seconds.mp3"
 
   fonts:
-    - family: DigitalClock
-      fonts: 
-        - asset: "assets/fonts/Open 24 Display St.ttf"
     - family: Digital
       fonts: 
         - asset: "assets/fonts/digital7.ttf"

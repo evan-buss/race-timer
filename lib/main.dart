@@ -118,9 +118,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Padding(
             padding: EdgeInsets.only(
-                bottom: 10 + MediaQuery.of(context).viewInsets.bottom),
+                bottom: 5 + MediaQuery.of(context).viewInsets.bottom),
             child: RaisedButton(
-              child: Text("Set Custom Time"),
+              child: Text("Set Custom Time",
+                  style: TextStyle(color: Colors.white)),
+              color: Colors.blueGrey,
               onPressed: () {
                 setState(() {
                   int newTime = int.parse(controller.text);
@@ -195,7 +197,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   topRight: Radius.circular(20)),
                             ),
                             context: context,
-                            builder: (BuildContext context) => _timeInputModal());
+                            builder: (BuildContext context) =>
+                                _timeInputModal());
                       } else {
                         prefs.setInt("defaultTime", value);
                         setState(() {
