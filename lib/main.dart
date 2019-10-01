@@ -143,68 +143,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          ButtonBar(
-            children: <Widget>[
-              IconButton(
-                color: Colors.white,
-                icon: Icon(Icons.remove),
-                onPressed: () {
-                  setState(() {
-                    if (_fontSize > 1) {
-                      _fontSize -= .1;
-                      prefs.setDouble("defaultFontSize", _fontSize);
-                    }
-                  });
-                },
-              ),
-              IconButton(
-                color: Colors.white,
-                icon: Icon(Icons.add),
-                onPressed: () {
-                  setState(() {
-                    if (_fontSize < 2.5) {
-                      _fontSize += .1;
-                      prefs.setDouble("defaultFontSize", _fontSize);
-                    }
-                  });
-                },
-              ),
-              PopupMenuButton(
-                  icon: Icon(
-                    Icons.timer,
-                    color: Colors.white,
-                  ),
-                  onSelected: (value) {
-                    if (value == -1) {
-                      showModalBottomSheet(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20)),
-                          ),
-                          context: context,
-                          builder: (BuildContext context) => _timeInputModal());
-                    } else {
-                      prefs.setInt("defaultTime", value);
-                      setState(() {
-                        _currentTime = value;
-                        if (_running || _timer != null) {
-                          _running = false;
-                          _timer.cancel();
-                        }
-                      });
-                    }
-                  },
-                  itemBuilder: (BuildContext context) {
-                    return [
-                      PopupMenuItem(child: Text("50 Seconds"), value: 50),
-                      PopupMenuItem(child: Text("30 Seconds"), value: 30),
-                      PopupMenuItem(child: Text("15 Seconds"), value: 15),
-                      PopupMenuItem(child: Text("Custom Time"), value: -1)
-                    ];
-                  })
-            ],
-          ),
           Center(
             child: Text(
               '$_currentTime',
@@ -213,6 +151,71 @@ class _MyHomePageState extends State<MyHomePage> {
                   .display1
                   .apply(fontSizeFactor: _fontSize),
               textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 18),
+            child: ButtonBar(
+              children: <Widget>[
+                IconButton(
+                  color: Colors.white,
+                  icon: Icon(Icons.remove),
+                  onPressed: () {
+                    setState(() {
+                      if (_fontSize > 1) {
+                        _fontSize -= .1;
+                        prefs.setDouble("defaultFontSize", _fontSize);
+                      }
+                    });
+                  },
+                ),
+                IconButton(
+                  color: Colors.white,
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    setState(() {
+                      if (_fontSize < 2.5) {
+                        _fontSize += .1;
+                        prefs.setDouble("defaultFontSize", _fontSize);
+                      }
+                    });
+                  },
+                ),
+                PopupMenuButton(
+                    icon: Icon(
+                      Icons.timer,
+                      color: Colors.white,
+                    ),
+                    onSelected: (value) {
+                      if (value == -1) {
+                        showModalBottomSheet(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20)),
+                            ),
+                            context: context,
+                            builder: (BuildContext context) => _timeInputModal());
+                      } else {
+                        prefs.setInt("defaultTime", value);
+                        setState(() {
+                          _currentTime = value;
+                          if (_running || _timer != null) {
+                            _running = false;
+                            _timer.cancel();
+                          }
+                        });
+                      }
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        PopupMenuItem(child: Text("50 Seconds"), value: 50),
+                        PopupMenuItem(child: Text("30 Seconds"), value: 30),
+                        PopupMenuItem(child: Text("15 Seconds"), value: 15),
+                        PopupMenuItem(child: Text("Custom Time"), value: -1)
+                      ];
+                    })
+              ],
             ),
           ),
         ],
