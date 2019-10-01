@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:audioplayers/audio_cache.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,9 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double _fontSize = prefs.getDouble("defaultFontSize") ?? 1.0;
   bool _running = false;
   Timer _timer;
-
-  DragStartDetails dragStart;
-  DragUpdateDetails dragUpdate;
+  TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
@@ -97,6 +96,48 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Widget _timeInputModal() {
+    return Container(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: TextField(
+              keyboardType: TextInputType.number,
+              controller: controller,
+              decoration: new InputDecoration(
+                labelText: "Enter time in seconds",
+                fillColor: Colors.white,
+                border: new OutlineInputBorder(
+                  borderRadius: new BorderRadius.circular(25.0),
+                  borderSide: new BorderSide(),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+                bottom: 16 + MediaQuery.of(context).viewInsets.bottom),
+            child: RaisedButton(
+              child: Text("Set Custom Time"),
+              onPressed: () {
+                setState(() {
+                  int newTime = int.parse(controller.text);
+                  if (newTime > 0 && newTime < 100) {
+                    _currentTime = newTime;
+                    prefs.setInt("defaultTime", _currentTime);
+                    Navigator.pop(context);
+                  }
+                });
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,21 +174,33 @@ class _MyHomePageState extends State<MyHomePage> {
                     Icons.timer,
                     color: Colors.white,
                   ),
-                  onSelected: (value) async {
-                    prefs.setInt("defaultTime", value);
-                    setState(() {
-                      _currentTime = value;
-                      if (_running || _timer != null) {
-                        _running = false;
-                        _timer.cancel();
-                      }
-                    });
+                  onSelected: (value) {
+                    if (value == -1) {
+                      showModalBottomSheet(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20)),
+                          ),
+                          context: context,
+                          builder: (BuildContext context) => _timeInputModal());
+                    } else {
+                      prefs.setInt("defaultTime", value);
+                      setState(() {
+                        _currentTime = value;
+                        if (_running || _timer != null) {
+                          _running = false;
+                          _timer.cancel();
+                        }
+                      });
+                    }
                   },
                   itemBuilder: (BuildContext context) {
                     return [
                       PopupMenuItem(child: Text("50 Seconds"), value: 50),
                       PopupMenuItem(child: Text("30 Seconds"), value: 30),
-                      PopupMenuItem(child: Text("15 Seconds"), value: 15)
+                      PopupMenuItem(child: Text("15 Seconds"), value: 15),
+                      PopupMenuItem(child: Text("Custom Time"), value: -1)
                     ];
                   })
             ],
