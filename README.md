@@ -12,4 +12,4 @@ A simple timer application that mimics a velodrome race countdown timer.
 
 ## Screenshot
 
-![screenshot]()
+![screenshot](https://github.com/evan-buss/race-timer/blob/master/screenshot.png)
