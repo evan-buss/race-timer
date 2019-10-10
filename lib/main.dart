@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Race Timer',
       themeMode: ThemeMode.dark,
+      debugShowCheckedModeBanner: false,
       darkTheme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
         primarySwatch: Colors.blueGrey,
